@@ -19,7 +19,7 @@ def addCase():
 
 def viewCases():
     windowCases = Toplevel()
-    windowCases.title('Список дел')
+    windowCases.title('Список делk')
     windowCases.geometry('300x300')
     windowCases.configure(bg='orange')
 
