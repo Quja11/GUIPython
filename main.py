@@ -17,29 +17,6 @@ def addCase():
         else:
             messagebox.showerror('Ежедневник', 'Длина должна быть больше 3')
 
-def viewCases():
-    windowCases = Toplevel()
-    windowCases.title('Список делk')
-    windowCases.geometry('300x300')
-    windowCases.configure(bg='orange')
-
-    with open('data.txt', encoding='utf-8') as file:
-        data = file.read()
-        data = data.split('\n')
-
-    #Убираем последний индекс (пустоту)
-    data.pop(len(data)-1)
-    print(data)
-
-    amountCase = 0
-    for i in range(len(data)):
-        amountCase += 1
-        label = Label(windowCases, text=str(i + 1) + ') ' + data[i], borderwidth=0, bg='orange', padx=5)
-        label.place(x=5, y=(i+1)*30)
-
-    checkBtn = Checkbutton(windowCases, text=i, variable=DISABLED, cursor='spider', bg='orange', offvalue='отключено')
-    checkBtn.place(relx=0.7, y=(i+1)*30)
-
 def changeConfig():
 
     def submitChange():
@@ -73,6 +50,8 @@ def changeConfig():
     btnConfig = Button(windowConfig, text='Изменить конфигурацию', bg='black', fg='white', command=submitChange)
     btnConfig.place(x=150, y=100)
 
+def aboutOfDev():
+    messagebox.showinfo('Информация о разработчике', 'Разработчик: Тахаев А.Г.\nПочта: takhaev80@bk.ru')
 
 
 #Конфигурация программы
@@ -90,44 +69,73 @@ print(sizesWindow)
 window = Tk()
 
 #Настройка окна приложения
-window.title("Ежедневник")
+window.title('Ежедневник')
 window.iconbitmap(default='src/pic.ico')
 window.geometry(sizesWindow  + '+' + str(400) + '+' + str(250))
 
-window.configure(bg=mainColor)
+#Глобальное отключение всех пунктир.линий в меню
+window.option_add("*tearOff", FALSE)
 
-#Позиционирование - ч/з метод place
-#Создание надписей
-label1 = Label(window, text='Введите дело: ', bg=mainColor)
-label1.place(x=20, y=20)
+#Настройка стилей ч/з объект Style модуля ttk
+frame_style = ttk.Style()
+frame_style.configure(".TFrame",
+                    background='#E9967A')
 
-#Дата и время
+
+
+#1 frame (рамка)
+frame = ttk.Frame(window, borderwidth=2, relief=GROOVE, height=80, width=500, padding=10, style=".TFrame")
+
+labelInput = Label(frame, text='Введите дело: ', borderwidth=2, relief='ridge')
+labelInput.place(x=0, y=0)
+
+input = Entry(frame, cursor='pirate')
+input.place(x=150, y=0)
+input.focus()
+
 dateAndTime = datetime.now()
-print(dateAndTime)
 neededValesDateAndTime = str(dateAndTime.date()) + '\n' + str(dateAndTime.time().hour) + ':' + str(dateAndTime.time().minute) + ':' + str(dateAndTime.time().second)
+labelDate = Label(frame, text=neededValesDateAndTime)
+labelDate.place(x=350, y=0)
 
-labelDate = Label(window, text=neededValesDateAndTime, bg=mainColor)
-labelDate.place(x=300, y=20)
+btnAdd = Button(frame, text='Записать', bg='black', fg='white', command=addCase)
+btnAdd.place(x=0, y=30)
 
-#Добавление кнопок
-btnAdd = Button(window, text='Записать', bg='black', fg='white', command=addCase)
-btnAdd.place(x=20, y=60)
+frame.place(x=0, y=0)
 
-btnViewCases = Button(window, text='Просмотреть дела', bg='black', fg='white', command= viewCases)
+
+btnViewCases = Button(window, text='Просмотреть дела', bg='black', fg='white')
 btnViewCases.place(x=20, y=100)
 
 btnConfig = Button(window, text='Изменить конфигурацию программы', bg='black', fg='white', command=changeConfig)
 btnConfig.place(x=20, y=140)
 
-#Добавление полей ввода
-input = Entry(window)
-input.place(x=120, y=20)
-input.focus()
-
 #Добавление progressBar
-prBar = ttk.Progressbar(orient='horizontal', length=500, value=10, maximum=100)
-prBar.start(1000)
-prBar.place(x = 0, rely=0.5)
+#prBar = ttk.Progressbar(orient='horizontal', length=500, value=10, maximum=100)
+#prBar.start(1000)
+#prBar.place(x = 0, rely=0.5)
+
+#Добавление фрейма (рамки, каркаса)
+#frame = ttk.Frame(window, borderwidth=1, relief=SOLID, height=500, width=500, padding=10)
+#but = Button(frame, text='Пример')
+#but.place(x=0, y=0)
+#but1 = Button(frame, text='Пример')
+#but1.place(x=0, y=80)
+#frame.place(x=0, y=180)
+
+#Cоздание меню
+main_menu = Menu()
+
+file_menu = Menu()
+file_menu.add_command(label='Open')
+file_menu.add_separator()
+file_menu.add_command(label='Exit', command=lambda: window.destroy())
+
+settings_menu = Menu()
+
+main_menu.add_cascade(label='Файл', menu=file_menu)
+main_menu.add_cascade(label='Настройки', menu=settings_menu)
+main_menu.add_command(label="Инфо", command=aboutOfDev)
 
 
 
@@ -140,11 +148,5 @@ prBar.place(x = 0, rely=0.5)
 
 
 
-
-
-
-
-
-
-
+window.config(menu=main_menu, bg=mainColor)
 window.mainloop()
