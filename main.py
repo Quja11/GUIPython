@@ -77,51 +77,31 @@ window.geometry(sizesWindow  + '+' + str(400) + '+' + str(250))
 window.option_add("*tearOff", FALSE)
 
 #Настройка стилей ч/з объект Style модуля ttk
-frame_style = ttk.Style()
-frame_style.configure(".TFrame",
-                    background='#E9967A')
+frame1_style = ttk.Style()
+frame1_style.configure("frame1.TFrame", background='#E9967A')
+
+frame2_style = ttk.Style()
+frame2_style.configure("frame2.TFrame", background='#B0E0E6')
+
+frame2_labels_style = ttk.Style()
+frame2_labels_style.configure("My.TLabel", background='#B0E0E6', foreground='black', relief='groove', padding=0)
 
 
 
 #1 frame (рамка)
-frame = ttk.Frame(window, borderwidth=2, relief=GROOVE, height=80, width=500, padding=10, style=".TFrame")
+frame1 = ttk.Frame(window, borderwidth=2, height=500, width=250, padding=10, style="frame1.TFrame")
 
-labelInput = Label(frame, text='Введите дело: ', borderwidth=2, relief='ridge')
+labelInput = Label(frame1, text='Введите дело: ', borderwidth=2, relief='ridge')
 labelInput.place(x=0, y=0)
 
-input = Entry(frame, cursor='pirate')
-input.place(x=150, y=0)
+input = Entry(frame1, cursor='pirate')
+input.place(x=100, y=0)
 input.focus()
 
-dateAndTime = datetime.now()
-neededValesDateAndTime = str(dateAndTime.date()) + '\n' + str(dateAndTime.time().hour) + ':' + str(dateAndTime.time().minute) + ':' + str(dateAndTime.time().second)
-labelDate = Label(frame, text=neededValesDateAndTime)
-labelDate.place(x=350, y=0)
-
-btnAdd = Button(frame, text='Записать', bg='black', fg='white', command=addCase)
+btnAdd = Button(frame1, text='Записать', bg='black', fg='white', command=addCase)
 btnAdd.place(x=0, y=30)
 
-frame.place(x=0, y=0)
-
-
-btnViewCases = Button(window, text='Просмотреть дела', bg='black', fg='white')
-btnViewCases.place(x=20, y=100)
-
-btnConfig = Button(window, text='Изменить конфигурацию программы', bg='black', fg='white', command=changeConfig)
-btnConfig.place(x=20, y=140)
-
-#Добавление progressBar
-#prBar = ttk.Progressbar(orient='horizontal', length=500, value=10, maximum=100)
-#prBar.start(1000)
-#prBar.place(x = 0, rely=0.5)
-
-#Добавление фрейма (рамки, каркаса)
-#frame = ttk.Frame(window, borderwidth=1, relief=SOLID, height=500, width=500, padding=10)
-#but = Button(frame, text='Пример')
-#but.place(x=0, y=0)
-#but1 = Button(frame, text='Пример')
-#but1.place(x=0, y=80)
-#frame.place(x=0, y=180)
+frame1.place(x=0, y=0)
 
 #Cоздание меню
 main_menu = Menu()
@@ -136,6 +116,55 @@ settings_menu = Menu()
 main_menu.add_cascade(label='Файл', menu=file_menu)
 main_menu.add_cascade(label='Настройки', menu=settings_menu)
 main_menu.add_command(label="Инфо", command=aboutOfDev)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Отображение дел в GUI
+with open('data.txt', 'r+', encoding='utf-8') as file:
+    cases = []
+    for i in file:
+        cases.append(i)
+    
+
+#2 рамка (каркас)
+frame2 = ttk.Frame(window, borderwidth=2, height=500, width=250, style="frame2.TFrame")
+
+labelCases = ttk.Label(frame2, text='Список: ', style="My.TLabel")
+labelCases.place(x=95, y=0)
+
+lengthOfListCases = len(cases)
+index = lengthOfListCases - lengthOfListCases + 1
+
+for i in cases:
+    ttk.Label(frame2, text=f'{index}) {i}', style="My.TLabel").place(x=10, y=index*35)
+    index += 1
+
+frame2.place(x=250, y=0)
+
+
+
 
 
 
